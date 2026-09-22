@@ -1,0 +1,59 @@
+table fact_target
+	lineageTag: 43f38b79-6980-4b6a-bba6-0e4f4ba8aa8d
+
+	column agent_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 4d2dd35a-74b6-44a4-b1d3-2d53e69aee05
+		summarizeBy: none
+		sourceColumn: agent_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column year
+		dataType: int64
+		formatString: 0
+		lineageTag: aa916da8-667a-4b15-be11-64225786b1d9
+		summarizeBy: sum
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	column month
+		dataType: int64
+		formatString: 0
+		lineageTag: f59bd035-38cc-4da2-abe8-2d77b25c7079
+		summarizeBy: sum
+		sourceColumn: month
+
+		annotation SummarizationSetBy = Automatic
+
+	column ape_target_usd
+		dataType: double
+		lineageTag: 79a80818-6b58-411d-ada7-f7e79c8ddd0a
+		summarizeBy: sum
+		sourceColumn: ape_target_usd
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column date_key = (fact_target[year] * 10000) + (fact_target[month] * 100) + 1
+		formatString: 0
+		lineageTag: 3b2f15ca-212a-4d0b-bbd9-f12b18b5fcfa
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_target = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\Users\Acer\Desktop\Interviews\TCS_Assignment\Assignment\data\fact_target.csv"),[Delimiter=",", Columns=4, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"agent_id", Int64.Type}, {"year", Int64.Type}, {"month", Int64.Type}, {"ape_target_usd", type number}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

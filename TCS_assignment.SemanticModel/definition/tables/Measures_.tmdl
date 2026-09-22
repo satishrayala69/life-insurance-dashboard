@@ -1,0 +1,194 @@
+table Measures_
+	lineageTag: 668115cc-0da3-4272-9ef9-8261ba787946
+
+	measure 'Total APE' = SUM(fact_sales[ape_usd])
+		lineageTag: bdb7e9ab-5188-4854-8b38-cbffb06b61cb
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'APE YTD' = ```
+			
+			TOTALYTD(
+			    [Total APE], 
+			    dim_date[date]
+			)
+			```
+		lineageTag: 99ab2d59-6613-42fa-8f94-3231d8408b85
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'APE MoM Growth %' = ```
+			
+			VAR PreviousMonthAPE = CALCULATE([Total APE], DATEADD(dim_date[date], -1, MONTH))
+			RETURN
+			DIVIDE(
+			    [Total APE] - PreviousMonthAPE, 
+			    PreviousMonthAPE, 
+			    0
+			)
+			```
+		lineageTag: ee546e22-fae6-4da3-984d-8731a9a85521
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'APE Rolling 3 Months' =
+			
+			CALCULATE(
+			    [Total APE],
+			    DATESINPERIOD(dim_date[date], MAX(dim_date[date]), -3, MONTH)
+			)
+		lineageTag: 5e1d9753-3cd1-44f4-b85c-617dc238c16e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Target' = SUM(fact_target[ape_target_usd])
+		lineageTag: b6284da9-c6c3-4f53-9cdc-82cced9c51cf
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'APE vs Target %' = ```
+			
+			DIVIDE(
+			    [Total APE], 
+			    [Total Target], 
+			    0
+			)
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 3039f190-3805-475d-84a9-421cf220b5a7
+
+	measure 'Persistency Rate' =
+			
+			CALCULATE(
+			    DIVIDE(
+			        COUNTROWS( FILTER( fact_persistency, fact_persistency[renewal_status] = "renewed" ) ),
+			        COUNTROWS( FILTER( fact_persistency, fact_persistency[renewal_status] IN { "renewed", "lapsed", "grace" } ) )
+			    ),
+			    USERELATIONSHIP(dim_date[date_key], fact_persistency[renewal_due_date_key])
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: f4e7a459-427b-404b-9952-58fd5c95c54c
+
+	measure 'Active Policy Count' = ```
+			
+			VAR _PeriodEnd = MAX(dim_date[date_key])
+			RETURN
+			CALCULATE(
+			    COUNTROWS(fact_persistency),
+			    // 1. The policy must have been issued on or before the end of the current period
+			    fact_persistency[issue_date_key] <= _PeriodEnd,
+			    
+			    // 2. It is still active if it's not lapsed, OR if it lapsed AFTER this period
+			    fact_persistency[renewal_status] IN {"renewed", "grace", "active"} 
+			    || 
+			    (fact_persistency[renewal_status] = "lapsed" && fact_persistency[renewal_due_date_key] > _PeriodEnd)
+			)
+			```
+		formatString: 0
+		lineageTag: f97b2e17-c330-4e0f-99f9-74ae216b8ec4
+
+	measure 'Active Agent Count' =
+			
+			CALCULATE(
+			    DISTINCTCOUNT(dim_agent[agent_id]),
+			    dim_agent[active_flag] = 1
+			)
+		formatString: 0
+		lineageTag: d8d523ae-ae51-416c-b36d-0f2b44313b2d
+
+	measure 'Agent Rank by APE' = ```
+			
+			RANKX(
+			    ALL(dim_agent[agent_name]), 
+			    [Total APE], 
+			    , 
+			    DESC, 
+			    Dense
+			)
+			```
+		formatString: 0
+		lineageTag: a3863814-0cbd-44d3-9ea1-b5a92698cf95
+
+	measure 'Agent Profile HTML' = ```
+			
+			// 1. Retrieve the Agent details
+			VAR _AgentName = SELECTEDVALUE(dim_agent[agent_name], "Select an Agent on Page 2")
+			
+			// Safely handle duplicate names and the "unselected" state
+			VAR _Territory = 
+			    IF(
+			        HASONEVALUE(dim_agent[agent_name]),
+			        CONCATENATEX(VALUES(dim_agent[territory]), dim_agent[territory], ", "),
+			        "---"
+			    )
+			
+			// 2. Format the required KPI measures
+			VAR _YTD_APE = FORMAT([APE YTD], "$#,##0")
+			VAR _Rank = [Agent Rank by APE]
+			VAR _MoM = [APE MoM Growth %]
+			VAR _MoM_Formatted = FORMAT(_MoM, "0.0%")
+			VAR _Persistency = FORMAT([Persistency Rate], "0.0%")
+			
+			// 3. Calculate dynamic color and arrow for the MoM Trend indicator
+			VAR _MoM_Color = IF(_MoM >= 0, "#2ca02c", "#d62728")
+			VAR _MoM_Arrow = IF(_MoM >= 0, "▲", "▼")
+			
+			// 4. Calculate the Top Product for this specific agent
+			VAR _TopProduct = 
+			    CALCULATE(
+			        MAX(dim_product[product_name]),
+			        TOPN(1, ALL(dim_product[product_name]), [Total APE], DESC)
+			    )
+			
+			// 5. Build and return the HTML string
+			RETURN
+			"
+			<div style='font-family: Segoe UI, Arial, sans-serif; background: #ffffff; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); max-width: 400px; box-sizing: border-box;'>
+			    <h2 style='margin: 0; color: #333333; font-size: 22px;'>" & _AgentName & "</h2>
+			    <p style='margin: 5px 0 20px 0; color: #777777; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;'>Territory: " & _Territory & "</p>
+			    
+			    <div style='display: flex; justify-content: space-between; margin-bottom: 12px;'>
+			        <div style='width: 48%; background: #f8f9fa; padding: 12px; border-radius: 6px; box-sizing: border-box;'>
+			            <div style='font-size: 12px; color: #666666; text-transform: uppercase;'>YTD APE</div>
+			            <div style='font-size: 18px; font-weight: bold; color: #111111; margin-top: 4px;'>" & _YTD_APE & "</div>
+			        </div>
+			        <div style='width: 48%; background: #f8f9fa; padding: 12px; border-radius: 6px; box-sizing: border-box;'>
+			            <div style='font-size: 12px; color: #666666; text-transform: uppercase;'>Rank</div>
+			            <div style='font-size: 18px; font-weight: bold; color: #111111; margin-top: 4px;'>#" & _Rank & "</div>
+			        </div>
+			    </div>
+			    
+			    <div style='display: flex; justify-content: space-between; margin-bottom: 12px;'>
+			        <div style='width: 48%; background: #f8f9fa; padding: 12px; border-radius: 6px; box-sizing: border-box;'>
+			            <div style='font-size: 12px; color: #666666; text-transform: uppercase;'>MoM Trend</div>
+			            <div style='font-size: 18px; font-weight: bold; color: " & _MoM_Color & "; margin-top: 4px;'>" & _MoM_Arrow & " " & _MoM_Formatted & "</div>
+			        </div>
+			        <div style='width: 48%; background: #f8f9fa; padding: 12px; border-radius: 6px; box-sizing: border-box;'>
+			            <div style='font-size: 12px; color: #666666; text-transform: uppercase;'>Persistency</div>
+			            <div style='font-size: 18px; font-weight: bold; color: #111111; margin-top: 4px;'>" & _Persistency & "</div>
+			        </div>
+			    </div>
+			    
+			    <div style='background: #f8f9fa; padding: 12px; border-radius: 6px; box-sizing: border-box;'>
+			        <div style='font-size: 12px; color: #666666; text-transform: uppercase;'>Top Product</div>
+			        <div style='font-size: 16px; font-weight: bold; color: #111111; margin-top: 4px;'>" & COALESCE(_TopProduct, "None") & "</div>
+			    </div>
+			</div>
+			"
+			```
+		lineageTag: ddaafbfd-3883-492e-ad20-c193a174fa98
+
+	partition Measures_ = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Column1"})
+				in
+				    #"Removed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

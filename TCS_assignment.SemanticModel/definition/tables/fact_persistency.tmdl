@@ -1,0 +1,90 @@
+table fact_persistency
+	lineageTag: 786eb79b-acc6-42e6-ab27-9288fa619aae
+
+	column policy_id
+		dataType: int64
+		formatString: 0
+		lineageTag: be103c7c-1e15-417b-ac45-17e37bbde776
+		summarizeBy: sum
+		sourceColumn: policy_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column agent_id
+		dataType: int64
+		formatString: 0
+		lineageTag: c8c955f7-909f-4a5b-9ece-771a53f67000
+		summarizeBy: none
+		sourceColumn: agent_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_id
+		dataType: int64
+		formatString: 0
+		lineageTag: c823db0b-8bb8-4130-a454-207a47a775ad
+		summarizeBy: none
+		sourceColumn: product_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column issue_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 4d98d96b-ac73-4591-a9d3-c664137caed3
+		summarizeBy: none
+		sourceColumn: issue_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column renewal_due_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: b7ed259e-6cd1-43aa-9602-627910fc824f
+		summarizeBy: sum
+		sourceColumn: renewal_due_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column renewal_status
+		dataType: string
+		lineageTag: 5f32a016-4553-4cf0-b85b-34368249f763
+		summarizeBy: none
+		sourceColumn: renewal_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column premium_usd
+		dataType: double
+		lineageTag: 8496c646-386f-442b-bd26-2b1bea3be608
+		summarizeBy: sum
+		sourceColumn: premium_usd
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Years Since Issue' =
+			
+			VAR IssueYear = INT(fact_persistency[issue_date_key] / 10000)
+			VAR RenewalYear = INT(fact_persistency[renewal_due_date_key] / 10000)
+			VAR YearDiff = RenewalYear - IssueYear
+			RETURN
+			"Year " & YearDiff
+		lineageTag: 28992e4b-5d53-41dc-8e95-9c6cac132bf2
+		summarizeBy: none
+
+		annotation SummarizationSetBy = User
+
+	partition fact_persistency = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\Users\Acer\Desktop\Interviews\TCS_Assignment\Assignment\data\fact_persistency.csv"),[Delimiter=",", Columns=7, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"policy_id", Int64.Type}, {"agent_id", Int64.Type}, {"product_id", Int64.Type}, {"issue_date_key", Int64.Type}, {"renewal_due_date_key", Int64.Type}, {"renewal_status", type text}, {"premium_usd", type number}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

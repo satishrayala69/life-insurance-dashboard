@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "TCS_assignment"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "09e824aa-8bb3-4970-8145-bd0ccc685e50"
+  }
+}

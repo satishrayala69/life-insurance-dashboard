@@ -1,0 +1,92 @@
+table Missing_Agents
+	lineageTag: 9dfdc433-b1eb-4131-ad51-413bb674bab7
+
+	column agent_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 2e927331-14c6-4305-bbcf-8f8f944d6f51
+		summarizeBy: sum
+		sourceColumn: agent_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column agent_code
+		dataType: string
+		lineageTag: ad65c743-4156-49f8-8747-06c515b990df
+		summarizeBy: none
+		sourceColumn: agent_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column agent_name
+		dataType: string
+		lineageTag: 477f8149-f9c8-47e2-b677-4850c5ef53e9
+		summarizeBy: none
+		sourceColumn: agent_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column region
+		dataType: string
+		lineageTag: 9792a6e7-a322-4419-8570-9ebbb8433d56
+		summarizeBy: none
+		sourceColumn: region
+
+		annotation SummarizationSetBy = Automatic
+
+	column territory
+		dataType: string
+		lineageTag: a13b85e3-6503-46db-b2b2-c8004563cdb1
+		summarizeBy: none
+		sourceColumn: territory
+
+		annotation SummarizationSetBy = Automatic
+
+	column office
+		dataType: string
+		lineageTag: 97b87a65-4300-46e5-8d30-0f0c94bde7eb
+		summarizeBy: none
+		sourceColumn: office
+
+		annotation SummarizationSetBy = Automatic
+
+	column join_date
+		dataType: string
+		lineageTag: 508c4178-bfc2-43e8-99c9-cda07e92c365
+		summarizeBy: none
+		sourceColumn: join_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column channel
+		dataType: string
+		lineageTag: fe0c4d7a-e03f-439f-84db-c9bb2ba52a96
+		summarizeBy: none
+		sourceColumn: channel
+
+		annotation SummarizationSetBy = Automatic
+
+	column active_flag
+		dataType: int64
+		formatString: 0
+		lineageTag: f82f5a98-3e62-45f6-a9bc-ce8437264e92
+		summarizeBy: sum
+		sourceColumn: active_flag
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Missing_Agents = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i45WsjQwMFTSUQrN887LL88jgQVEJZmpKfGJ6al5yZUggVgdsHFG1DXOmFzjkhLzkhOLi0uLgHQqkoEm1DbQlLoeNqO2+8yp6z4L6hpnSVXjDA2oHHqGVMsdsQA=", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [agent_id = _t, agent_code = _t, agent_name = _t, region = _t, territory = _t, office = _t, join_date = _t, channel = _t, active_flag = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"agent_id", Int64.Type}, {"agent_code", type text}, {"agent_name", type text}, {"region", type text}, {"territory", type text}, {"office", type text}, {"join_date", type text}, {"channel", type text}, {"active_flag", type text}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Changed Type","","1",Replacer.ReplaceValue,{"active_flag"}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Replaced Value",{{"active_flag", Int64.Type}})
+				in
+				    #"Changed Type1"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

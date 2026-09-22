@@ -1,0 +1,92 @@
+table dim_agent
+	lineageTag: 0c0f0c7e-402d-43b4-b1e5-f79a78f3afed
+
+	column agent_id
+		dataType: int64
+		formatString: 0
+		lineageTag: f5535d07-8da7-4194-b92a-928973a8ab4f
+		summarizeBy: none
+		sourceColumn: agent_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column agent_code
+		dataType: string
+		lineageTag: e567bdbf-1ded-4c7a-afc2-526728cf96b9
+		summarizeBy: none
+		sourceColumn: agent_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column agent_name
+		dataType: string
+		lineageTag: abe86579-b487-4cfa-9b0d-08f285dca319
+		summarizeBy: none
+		sourceColumn: agent_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column region
+		dataType: string
+		lineageTag: cd309f7d-8de8-4fbf-bdc8-665479659353
+		summarizeBy: none
+		sourceColumn: region
+
+		annotation SummarizationSetBy = Automatic
+
+	column territory
+		dataType: string
+		lineageTag: d962b22b-815c-468b-859c-e676b829f1e8
+		summarizeBy: none
+		sourceColumn: territory
+
+		annotation SummarizationSetBy = Automatic
+
+	column office
+		dataType: string
+		lineageTag: 922553f2-e605-4dea-bc39-8ea1321f0194
+		summarizeBy: none
+		sourceColumn: office
+
+		annotation SummarizationSetBy = Automatic
+
+	column join_date
+		dataType: string
+		lineageTag: 0f0ef607-640f-4a76-92b3-37c6cd769dd3
+		summarizeBy: none
+		sourceColumn: join_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column channel
+		dataType: string
+		lineageTag: 37b25cc0-0fdd-4166-9d7c-905b3777e599
+		summarizeBy: none
+		sourceColumn: channel
+
+		annotation SummarizationSetBy = Automatic
+
+	column active_flag
+		dataType: int64
+		formatString: 0
+		lineageTag: 6fe9f010-6f8e-4560-aeca-c8e5f4c37e34
+		summarizeBy: sum
+		sourceColumn: active_flag
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_agent = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\Users\Acer\Desktop\Interviews\TCS_Assignment\Assignment\data\dim_agent.csv"),[Delimiter=",", Columns=9, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"agent_id", Int64.Type}, {"agent_code", type text}, {"agent_name", type text}, {"region", type text}, {"territory", type text}, {"office", type text}, {"join_date", type date}, {"channel", type text}, {"active_flag", Int64.Type}}),
+				    #"Appended Query" = Table.Combine({#"Changed Type", Missing_Agents})
+				in
+				    #"Appended Query"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

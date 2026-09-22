@@ -1,0 +1,29 @@
+{
+  "version": "2.0.0.20260909#7e0d1902",
+  "author": {
+    "name": "Daniel Marsh-Patrick",
+    "email": "daniel@coacervo.co"
+  },
+  "resources": [
+    {
+      "resourceId": "rId0",
+      "sourceType": 5,
+      "file": "resources/BETAhtmlContent443BE3AD55E043BF878BED274D3A6865.pbiviz.json"
+    }
+  ],
+  "visual": {
+    "guid": "BETAhtmlContent443BE3AD55E043BF878BED274D3A6865",
+    "name": "htmlContent",
+    "displayName": "HTML Content Secure (Beta)",
+    "version": "2.0.0.20260909#7e0d1902",
+    "description": "Visualize column or measure values as HTML in your Power BI reports. This version does not allow loading of remote content, and allows a smaller subset of HTML tags.",
+    "supportUrl": "https://www.html-content.com",
+    "gitHubUrl": "https://github.com/dm-p/powerbi-visuals-html-content",
+    "visualClassName": "Visual"
+  },
+  "metadata": {
+    "pbivizjson": {
+      "resourceId": "rId0"
+    }
+  }
+}
