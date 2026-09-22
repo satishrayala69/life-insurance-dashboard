@@ -1,148 +1,103 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page 1 Wireframe - Executive Summary</title>
+    <title>Page 1 Wireframe</title>
     <style>
+        /* Basic page setup */
         body { 
             font-family: sans-serif; 
-            margin: 0; 
-            padding: 10px; 
-            background: #f4f7f6; 
-        }
-        .container { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 15px; 
-            max-width: 1200px; 
-            margin: 0 auto; 
-        }
-        /* Header Zone */
-        .header { 
-            background: #005A9C; 
-            color: white; 
             padding: 20px; 
+            color: #333;
+        }
+
+        /* Gray background boxes to clearly show the zones */
+        .zone { 
+            border: 2px solid #666; 
+            padding: 20px; 
+            margin-bottom: 20px; 
+            background-color: #f0f0f0; 
+        }
+
+        /* 1. Header Layout */
+        .header-zone { 
             text-align: center; 
-            font-size: 24px; 
-            font-weight: bold; 
-            border-radius: 4px;
+            background-color: #dcdcdc; 
         }
-        /* Filter Area Zone */
-        .filters { 
+
+        /* 2. Filter Layout */
+        .filter-zone { 
             display: flex; 
-            flex-wrap: wrap; 
-            gap: 10px; 
-            background: #e0e0e0; 
-            padding: 15px; 
-            border: 1px solid #ccc; 
-            align-items: center;
-            border-radius: 4px;
+            gap: 15px; 
         }
-        .filter-box { 
-            background: white; 
-            padding: 5px 15px; 
-            border: 1px solid #999; 
-            border-radius: 4px; 
-            cursor: pointer;
+        .filter-button {
+            padding: 5px 15px;
+            border: 1px solid #999;
+            background: white;
         }
-        /* KPI Strip Zone */
-        .kpi-strip { 
+
+        /* 3. KPI Layout */
+        .kpi-zone { 
             display: flex; 
-            flex-wrap: wrap; 
-            gap: 10px; 
             justify-content: space-between; 
+            gap: 10px; 
         }
-        .kpi-card { 
-            flex: 1; 
-            min-width: 140px; 
-            background: white; 
+        .kpi-box { 
+            border: 1px solid black; 
             padding: 20px; 
-            border: 1px solid #dcdcdc; 
+            width: 22%; 
             text-align: center; 
-            border-radius: 4px; 
-            box-shadow: 1px 1px 4px rgba(0,0,0,0.05); 
+            background-color: white; 
         }
-        .kpi-card h3 { margin: 0 0 10px 0; font-size: 14px; color: #555; }
-        .kpi-card p { margin: 0; font-size: 22px; font-weight: bold; color: #333; }
-        /* Chart Area Zone */
-        .charts { 
+
+        /* 4. Chart Layout */
+        .chart-zone { 
             display: flex; 
-            flex-wrap: wrap; 
-            gap: 15px; 
+            gap: 20px; 
         }
         .chart-box { 
-            flex: 1; 
-            min-width: 300px; 
-            background: white; 
-            padding: 20px; 
-            border: 1px solid #dcdcdc; 
-            border-radius: 4px; 
-            min-height: 250px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            color: #666; 
+            border: 1px dashed black; 
+            padding: 60px 20px; 
+            width: 45%; 
             text-align: center; 
-            box-shadow: 1px 1px 4px rgba(0,0,0,0.05); 
+            background-color: white; 
         }
-        /* Mobile Layout Stacking */
-        @media (max-width: 768px) {
-            .kpi-card, .chart-box { min-width: 100%; }
-            .filters { flex-direction: column; align-items: stretch; text-align: center; }
+        
+        /* Mobile layout: stack items on small screens */
+        @media (max-width: 600px) {
+            .kpi-zone, .chart-zone { flex-direction: column; }
+            .kpi-box, .chart-box { width: auto; margin-bottom: 10px; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        
-        <!-- HEADER ZONE -->
-        <div class="header">Executive Summary</div>
-        
-        <!-- FILTER AREA ZONE -->
-        <div class="filters">
-            <strong>Slicers:</strong>
-            <div class="filter-box">Region ▾</div>
-            <div class="filter-box">Channel ▾</div>
-            <div class="filter-box">Year ▾</div>
-        </div>
 
-        <!-- KPI STRIP ZONE -->
-        <div class="kpi-strip">
-            <div class="kpi-card">
-                <h3>APE YTD</h3>
-                <p>$$$</p>
-            </div>
-            <div class="kpi-card">
-                <h3>APE vs Target %</h3>
-                <p>%</p>
-            </div>
-            <div class="kpi-card">
-                <h3>Active Agents</h3>
-                <p>#</p>
-            </div>
-            <div class="kpi-card">
-                <h3>Persistency Rate</h3>
-                <p>%</p>
-            </div>
-        </div>
-
-        <!-- CHART AREA ZONE -->
-        <div class="charts">
-            <div class="chart-box">
-                <div>
-                    <strong>Monthly APE Trend</strong><br><br>
-                    <em>(Line chart with Monthly APE + Target Line Overlay)</em>
-                </div>
-            </div>
-            <div class="chart-box">
-                <div>
-                    <strong>Top 10 Agents by APE</strong><br><br>
-                    <em>(Bar chart)</em>
-                </div>
-            </div>
-        </div>
-
+    <!-- ZONE 1: HEADER -->
+    <div class="zone header-zone">
+        <h1>Executive Summary</h1>
     </div>
+
+    <!-- ZONE 2: FILTERS -->
+    <div class="zone filter-zone">
+        <strong>Slicers:</strong>
+        <div class="filter-button">Region</div>
+        <div class="filter-button">Channel</div>
+        <div class="filter-button">Year</div>
+    </div>
+
+    <!-- ZONE 3: KPI STRIP -->
+    <div class="zone kpi-zone">
+        <div class="kpi-box">APE YTD<br><strong>[ Value ]</strong></div>
+        <div class="kpi-box">APE vs Target %<br><strong>[ Value ]</strong></div>
+        <div class="kpi-box">Active Agents<br><strong>[ Value ]</strong></div>
+        <div class="kpi-box">Persistency Rate<br><strong>[ Value ]</strong></div>
+    </div>
+
+    <!-- ZONE 4: CHARTS -->
+    <div class="zone chart-zone">
+        <div class="chart-box">Monthly APE with Target (Line Chart)</div>
+        <div class="chart-box">Top 10 Agents by APE (Bar Chart)</div>
+    </div>
+
 </body>
 </html>
