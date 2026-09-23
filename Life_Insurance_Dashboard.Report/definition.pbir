@@ -2,7 +2,7 @@
   "version": "4.0",
   "datasetReference": {
     "byPath": {
-      "path": "../TCS_assignment.SemanticModel"
+      "path": "../Life_Insurance_Dashboard.SemanticModel"
     }
   }
 }
