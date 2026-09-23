@@ -1,6 +1,3 @@
-Here is a more conversational, human-sounding version of the README. It reads like a developer explaining their project naturally to a manager or interviewer, while still hitting all the technical requirements perfectly.
-
-
 Life Insurance Agent Performance Dashboard
 Project Overview
 This Power BI dashboard tracks how well our life insurance agents are performing—looking closely at their sales (APE), target hits, and how well they retain policies over time. I built it using a solid data model, some custom visuals (like Deneb and HTML Content) to get exactly the right look, and DAX to handle the messy real-world data I found in the raw files.
