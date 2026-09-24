@@ -249,13 +249,13 @@
           "z": 0.00
         },
         {
-          "config": "{\"name\":\"87a3a99a3d3b20500367\",\"layouts\":[{\"id\":0,\"position\":{\"x\":0,\"y\":0,\"z\":1,\"width\":1280,\"height\":64,\"tabOrder\":1}}],\"singleVisual\":{\"visualType\":\"textbox\",\"drillFilterOtherVisuals\":true,\"objects\":{\"general\":[{\"properties\":{\"paragraphs\":[{\"textRuns\":[{\"value\":\"Persistency Cohort\",\"textStyle\":{\"fontWeight\":\"bold\",\"fontSize\":\"28pt\",\"textDecoration\":\"underline\",\"color\":\"#ffffff\"}}],\"horizontalTextAlignment\":\"center\"}]}}]},\"vcObjects\":{\"background\":[{\"properties\":{\"color\":{\"solid\":{\"color\":{\"expr\":{\"ThemeDataColor\":{\"ColorId\":1,\"Percent\":0.4}}}}},\"transparency\":{\"expr\":{\"Literal\":{\"Value\":\"70D\"}}}}}]}}}",
+          "config": "{\"name\":\"87a3a99a3d3b20500367\",\"layouts\":[{\"id\":0,\"position\":{\"x\":0,\"y\":0,\"z\":1000,\"width\":1280,\"height\":64,\"tabOrder\":1000}}],\"singleVisual\":{\"visualType\":\"textbox\",\"drillFilterOtherVisuals\":true,\"objects\":{\"general\":[{\"properties\":{\"paragraphs\":[{\"textRuns\":[{\"value\":\"Persistency Cohort\",\"textStyle\":{\"fontWeight\":\"bold\",\"fontSize\":\"28pt\",\"textDecoration\":\"underline\",\"color\":\"#ffffff\"}}],\"horizontalTextAlignment\":\"center\"}]}}]},\"vcObjects\":{\"background\":[{\"properties\":{\"color\":{\"solid\":{\"color\":{\"expr\":{\"ThemeDataColor\":{\"ColorId\":1,\"Percent\":0.4}}}}},\"transparency\":{\"expr\":{\"Literal\":{\"Value\":\"70D\"}}}}}]}}}",
           "filters": "[]",
           "height": 64.00,
           "width": 1280.00,
           "x": 0.00,
           "y": 0.00,
-          "z": 1.00
+          "z": 1000.00
         }
       ],
       "width": 1280.00

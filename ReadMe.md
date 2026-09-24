@@ -1,5 +1,7 @@
 Life Insurance Agent Performance Dashboard
+
 Project Overview
+
 This Power BI dashboard tracks how well our life insurance agents are performing—looking closely at their sales (APE), target hits, and how well they retain policies over time. I built it using a solid data model, some custom visuals (like Deneb and HTML Content) to get exactly the right look, and DAX to handle the messy real-world data I found in the raw files.
 
 
@@ -42,4 +44,3 @@ If I were deploying this into a full production environment, here are a few prac
 2.	Push transformations upstream: Right now, I'm handling the missing agent cleanup inside Power Query. Ideally, I'd want to push that logic back to the SQL database or Data Warehouse so the Power BI model stays as light and fast as possible.
 
 3.	Add interactive toggles: I'd love to add a toggle switch using Power BI bookmarks so users could flip between Month-to-Date and Year-to-Date views on the same page, without needing to navigate to a completely different tab.
-
